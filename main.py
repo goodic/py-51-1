@@ -66,7 +66,7 @@ class YaUploader:
         print('Загружаем картинки на диск')
         for picture in reesrt:
             url = 'https://cloud-api.yandex.net/v1/disk/resources/upload?'
-            params = {'path': str(folder + '/' + picture.name + '.jpg'), 'url': picture.pic_url}
+            params = {'path': str(folder) + '/' + picture.name, 'url': picture.pic_url}
             url += parse.urlencode(params)
             headers = self.get_headers()
             requests.post(url, headers=headers)
@@ -78,9 +78,9 @@ def make_pict_names(reestr):
     name_list = []
     for picture in reestr:
         if picture.like_quant in name_list:
-            picture.name = str(picture.like_quiant) + str(picture.date)
+            picture.name = str(picture.like_quiant) + str(picture.date) + '.jpg'
         else:
-            picture.name = str(picture.like_quant)
+            picture.name = str(picture.like_quant) + '.jpg'
             name_list.append(picture.like_quant)
 
 
@@ -122,6 +122,13 @@ def get_tokens(file_name):
     return tokens
 
 
+def make_out_file(reestr):
+    out = []
+    for picture in reestr:
+        out.append({'file_name': picture.name, 'size': picture.size})
+    with open('out.json', 'w') as f:
+        f.write(json.dumps(out))
+
 if __name__ == '__main__':
     tokens = get_tokens('tokens')
     user = VkUser(input('Введите id или ник пользователя ВК: '), tokens['VK'])
@@ -130,4 +137,5 @@ if __name__ == '__main__':
     reestr = get_pics(user, pic_quant)
     uploader = YaUploader(tokens['YA'])
     uploader.upload(reestr, user.id)
+    make_out_file(reestr)
     print('Загрузка завершена')
