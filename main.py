@@ -71,6 +71,7 @@ class YaUploader:
             headers = self.get_headers()
             requests.post(url, headers=headers)
             sleep(0.23)
+        print('Загрузка завершена')
 
 
 def make_pict_names(reestr):
@@ -123,6 +124,7 @@ def get_tokens(file_name):
 
 
 def make_out_file(reestr):
+    print('Сохраняем информацию о файлах')
     out = []
     for picture in reestr:
         out.append({'file_name': picture.name, 'size': picture.size})
@@ -138,4 +140,4 @@ if __name__ == '__main__':
     uploader = YaUploader(tokens['YA'])
     uploader.upload(reestr, user.id)
     make_out_file(reestr)
-    print('Загрузка завершена')
+    print('Готово')
